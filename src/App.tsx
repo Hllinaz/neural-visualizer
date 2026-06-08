@@ -437,7 +437,7 @@ function App() {
 
 			if (event.key === "ArrowRight") {
 				event.preventDefault()
-				startEpochRef.current()
+				advanceStepRef.current()
 				return
 			}
 
