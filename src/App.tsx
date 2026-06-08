@@ -46,7 +46,7 @@ export const LOSSES = {
 export const INITIALIZERS = {
 	he: HeInitializer,
 	xavier: XavierInitializer,
-	personalizado: CustomInitializer
+	custom: CustomInitializer
 }
 
 const traceBuilder = new NeuralTraceBuilder()
@@ -58,7 +58,7 @@ function createNetwork(
 	loss: keyof typeof LOSSES,
 	initializer: keyof typeof INITIALIZERS
 ) {
-	const isCustomInitializer = initializer === "personalizado"
+	const isCustomInitializer = initializer === "custom"
 
 	return new NeuralNetwork({
 		architecture,
@@ -137,7 +137,7 @@ function App() {
 	)
 
 	const selectedBiasValue = selectedBias?.bias ?? 0
-	const isCustomInitializer = initializer === "personalizado"
+	const isCustomInitializer = initializer === "custom"
 
 	useEffect(() => {
 		if (weightOptions.length === 0) {
@@ -633,20 +633,20 @@ function buildBackwardTableRow(
 function buildInitialParameterRows(snapshot: NetworkSnapshot): TableRow[] {
 	return [
 		...getWeightValues(snapshot).map((value, index) => ({
-			Parametro: `w${index + 1}`,
-			Inicial: formatTableNumber(value)
+			Parameter: `w${index + 1}`,
+			Initial: formatTableNumber(value)
 		})),
 		...getBiasValues(snapshot).map((value, index) => ({
-			Parametro: `b${index + 1}`,
-			Inicial: formatTableNumber(value)
+			Parameter: `b${index + 1}`,
+			Initial: formatTableNumber(value)
 		})),
 		...getActivationValues(snapshot).map((item) => ({
-			Parametro: item.label,
-			Inicial: "NA"
+			Parameter: item.label,
+			Initial: "NA"
 		})),
 		{
-			Parametro: "grad_mean",
-			Inicial: "NA"
+			Parameter: "grad_mean",
+			Initial: "NA"
 		}
 	]
 }
@@ -663,7 +663,7 @@ function appendParameterEpoch(
 	const gradMean = getGradientMean(snapshot)
 
 	return rows.map(row => {
-		const parameter = String(row.Parametro)
+		const parameter = String(row.Parameter)
 		const weightMatch = /^w(\d+)$/.exec(parameter)
 		const biasMatch = /^b(\d+)$/.exec(parameter)
 		const activation = activations.find(item => item.label === parameter)

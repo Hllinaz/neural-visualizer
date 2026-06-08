@@ -19,7 +19,7 @@ export const LOSSES = {
 export const INITIALIZERS = {
     he: HeInitializer,
     xavier: XavierInitializer,
-    personalizado: CustomInitializer
+    custom: CustomInitializer
 }
 
 const AUTHORS = [
@@ -226,8 +226,8 @@ export function Sidebar({
 
                 <p className="sidebar-hint">
                     {canEditWeights
-                        ? "Edita el peso antes de iniciar la red."
-                        : "Puedes seleccionar pesos para inspeccionarlos. Usa Reset para volver a editarlos."}
+                        ? "Edit the weight before starting the network."
+                        : "You can select weights to inspect them. Use Reset to edit them again."}
                 </p>
 
             </div>
@@ -283,7 +283,7 @@ export function Sidebar({
                 </button>
 
                 <p className="sidebar-hint">
-                    Edita el bias antes de iniciar la red. Reset lo devuelve a 0.
+                    Edit the bias before starting the network. Reset returns it to 0.
                 </p>
 
             </div>

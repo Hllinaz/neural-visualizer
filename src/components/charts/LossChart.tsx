@@ -25,18 +25,18 @@ export function LossChart({ data }: Props) {
     return (
         <section className="loss-chart-panel">
             <div className="loss-chart-header">
-                <h2>Perdida</h2>
+                <h2>Loss</h2>
                 <span>
                     {latestLoss === undefined
-                        ? "Epoca 0"
-                        : `Epoca ${data.length} · ${formatLoss(latestLoss)}`}
+                        ? "Epoch 0"
+                        : `Epoch ${data.length} · ${formatLoss(latestLoss)}`}
                 </span>
             </div>
 
             <div className="loss-chart-body">
                 {data.length === 0 ? (
                     <div className="loss-chart-empty">
-                        Sin epocas
+                        No epochs yet
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
@@ -69,9 +69,9 @@ export function LossChart({ data }: Props) {
                             <Tooltip
                                 formatter={(value) => [
                                     formatLoss(Number(value)),
-                                    "Perdida"
+                                    "Loss"
                                 ]}
-                                labelFormatter={(value) => `Epoca ${value}`}
+                                labelFormatter={(value) => `Epoch ${value}`}
                             />
                             <Line
                                 type="monotone"

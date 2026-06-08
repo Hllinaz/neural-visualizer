@@ -47,7 +47,7 @@ export class NeuralTraceBuilder {
             )
         }
 
-        // 🔹 agregar capa 0 al trace
+        // Add input layer to the trace
         trace.addLayerTrace(inputTrace)
 
         for (let l = 1; l < layers.length; l++) {

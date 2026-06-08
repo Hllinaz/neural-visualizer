@@ -661,9 +661,9 @@ function drawLegend(
     ctx.textAlign = "left"
     ctx.textBaseline = "middle"
 
-    drawLegendItem(ctx, x, y, THEME.connection.positive, "peso +")
-    drawLegendItem(ctx, x + 82, y, THEME.connection.negative, "peso -")
-    drawLegendItem(ctx, x + 164, y, THEME.node.active, "actual")
+    drawLegendItem(ctx, x, y, THEME.connection.positive, "weight +")
+    drawLegendItem(ctx, x + 96, y, THEME.connection.negative, "weight -")
+    drawLegendItem(ctx, x + 192, y, THEME.node.active, "current")
 
     ctx.restore()
 }

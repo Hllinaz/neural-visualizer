@@ -68,7 +68,7 @@ function buildForwardContent(trace: ForwardNodeTrace, step: number) {
         return `
 # Input Layer
 
-Esta neurona recibe un valor directamente desde el dataset.
+This neuron receives a value directly from the dataset.
 
 $$
 a = x = ${format(trace.activation)}
@@ -100,7 +100,7 @@ $$
     return `
 # Forward Pass
 
-Nodo: capa ${trace.layerIndex}, neurona ${trace.nodeIndex}
+Node: layer ${trace.layerIndex}, neuron ${trace.nodeIndex}
 
 ## Formula
 
@@ -112,26 +112,26 @@ $$
 a = f(z)
 $$
 
-## Sustitucion
+## Substitution
 
 $$
 z = ${terms || "0"}${visibleStep >= trace.terms.length ? ` + ${format(trace.bias ?? 0)}` : ""}
 $$
 
 ${currentTerm ? `
-## Termino Actual
+## Current Term
 
 $$
 w_i a_i = ${format(currentTerm.weight)} \\times ${format(currentTerm.input)} = ${format(currentTerm.product)}
 $$
 
 $$
-\\text{suma parcial} = ${format(currentSum)}
+\\text{partial sum} = ${format(currentSum)}
 $$
 ` : ""}
 
 ${visibleStep >= trace.terms.length ? `
-## Suma Ponderada
+## Weighted Sum
 
 $$
 z = ${format(trace.z ?? 0)}
@@ -139,7 +139,7 @@ $$
 ` : ""}
 
 ${visibleStep >= trace.terms.length + 1 ? `
-## Activacion
+## Activation
 
 $$
 a = f(${format(trace.z ?? 0)}) = ${format(trace.activation)}
@@ -162,7 +162,7 @@ function buildBackwardContent(
         return `
 # Backpropagation
 
-La capa de entrada no calcula delta propio.
+The input layer does not compute its own delta.
 
 $$
 \\delta = 0
@@ -194,7 +194,7 @@ $$
         return `
 # Backpropagation
 
-Nodo de salida: capa ${trace.layerIndex}, neurona ${trace.nodeIndex}
+Output node: layer ${trace.layerIndex}, neuron ${trace.nodeIndex}
 
 ## Formula
 
@@ -202,7 +202,7 @@ $$
 \\delta = \\frac{\\partial L}{\\partial a} \\cdot f'(z)
 $$
 
-## Valores
+## Values
 
 ${target !== undefined ? `
 $$
@@ -223,7 +223,7 @@ $$
     return `
 # Backpropagation
 
-Nodo oculto: capa ${trace.layerIndex}, neurona ${trace.nodeIndex}
+Hidden node: layer ${trace.layerIndex}, neuron ${trace.nodeIndex}
 
 ## Formula
 
@@ -231,14 +231,14 @@ $$
 \\delta = f'(z) \\cdot \\sum_j w_j \\delta_j
 $$
 
-## Gradientes Propagados
+## Propagated Gradients
 
 $$
 \\sum_j w_j \\delta_j = ${gradientTerms || "0"}
 $$
 
 ${currentConnection ? `
-## Conexion Actual
+## Current Connection
 
 $$
 \\frac{\\partial L}{\\partial w} = a_{prev} \\cdot \\delta_{next}
@@ -250,7 +250,7 @@ $$
 ` : ""}
 
 ${visibleStep >= trace.connections.length ? `
-## Suma
+## Sum
 
 $$
 \\sum_j w_j \\delta_j = ${format(trace.propagatedSum)}
@@ -258,7 +258,7 @@ $$
 ` : ""}
 
 ${visibleStep >= trace.connections.length + 1 ? `
-## Derivada
+## Derivative
 
 $$
 f'(z) = ${format(trace.activationDerivative)}
@@ -283,7 +283,7 @@ function format(value: number) {
 const introFormulaContent = `
 # Neural Network Math
 
-Selecciona **Step** para ver como cada neurona calcula sus valores.
+Select **Step** to see how each neuron computes its values.
 
 ## Forward
 

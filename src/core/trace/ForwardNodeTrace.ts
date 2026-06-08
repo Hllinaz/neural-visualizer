@@ -43,7 +43,7 @@ export class ForwardNodeTrace implements NodeTrace {
 
     getStepCount(): number {
 
-        // input layer no tiene pasos de computación
+        // input layer has no computation steps
         if (this.terms.length === 0) {
             return 1
         }
