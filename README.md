@@ -55,24 +55,6 @@ The full documentation should live in the GitHub Wiki:
 
 https://github.com/Hllinaz/neural-visualizer/wiki
 
-To edit the Wiki:
-
-1. Open the repository on GitHub.
-2. Go to the `Wiki` tab.
-3. Create or edit the home page.
-4. Add pages for usage, formulas, training controls, table exports, and examples.
-
-Suggested Wiki pages:
-
-- Home
-- User Guide
-- Network Configuration
-- Training Controls
-- Forward Pass
-- Backpropagation
-- Exported Tables
-- Keyboard Shortcuts
-
 ## Authors
 
 **Humberto J. Llinas M.**  
