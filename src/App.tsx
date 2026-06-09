@@ -462,7 +462,13 @@ function App() {
 
 		<div className="app">
 
-			<Header />
+			<Header
+				isPlaying={isPlaying}
+				onStep={handleStep}
+				onEpoch={handleEpoch}
+				onReset={handleReset}
+				onPlayToggle={handlePlayToggle}
+			/>
 
 			<div className="main-layout">
 
@@ -473,11 +479,6 @@ function App() {
 						controller.setMode(value)
 					}}
 
-					onStep={handleStep}
-					onEpoch={handleEpoch}
-					onReset={handleReset}
-					isPlaying={isPlaying}
-					onPlayToggle={handlePlayToggle}
 					canDownloadTables={forwardRows.length > 0}
 					onGenerateTable={handleGenerateTable}
 

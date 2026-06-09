@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import {
     CartesianGrid,
     Line,
@@ -20,20 +21,66 @@ interface Props {
 }
 
 export function LossChart({ data }: Props) {
+    const chartRef = useRef<HTMLDivElement | null>(null)
     const latestLoss = data[data.length - 1]?.loss
+
+    const handleDownloadChart = () => {
+        const svg = chartRef.current?.querySelector("svg")
+
+        if (!svg || data.length === 0) return
+
+        const clone = svg.cloneNode(true) as SVGSVGElement
+        const { width, height } = svg.getBoundingClientRect()
+
+        clone.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+        clone.setAttribute("width", String(Math.ceil(width)))
+        clone.setAttribute("height", String(Math.ceil(height)))
+        clone.setAttribute("viewBox", `0 0 ${Math.ceil(width)} ${Math.ceil(height)}`)
+
+        const background = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+        background.setAttribute("width", "100%")
+        background.setAttribute("height", "100%")
+        background.setAttribute("fill", "#ffffff")
+        clone.insertBefore(background, clone.firstChild)
+
+        const svgText = new XMLSerializer().serializeToString(clone)
+        const blob = new Blob([svgText], {
+            type: "image/svg+xml;charset=utf-8"
+        })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+
+        link.href = url
+        link.download = "loss_chart.svg"
+        link.click()
+
+        URL.revokeObjectURL(url)
+    }
 
     return (
         <section className="loss-chart-panel">
             <div className="loss-chart-header">
                 <h2>Loss</h2>
-                <span>
-                    {latestLoss === undefined
-                        ? "Epoch 0"
-                        : `Epoch ${data.length} · ${formatLoss(latestLoss)}`}
-                </span>
+                <div className="loss-chart-actions">
+                    <span>
+                        {latestLoss === undefined
+                            ? "Epoch 0"
+                            : `Epoch ${data.length} · ${formatLoss(latestLoss)}`}
+                    </span>
+                    <button
+                        type="button"
+                        className="loss-chart-download"
+                        aria-label="Download loss chart"
+                        title="Download loss chart"
+                        disabled={data.length === 0}
+                        onClick={handleDownloadChart}
+                    >
+                        ↓
+                    </button>
+                </div>
             </div>
 
-            <div className="loss-chart-body">
+            <div className="loss-chart-body" ref={chartRef}>
                 {data.length === 0 ? (
                     <div className="loss-chart-empty">
                         No epochs yet
@@ -46,7 +93,7 @@ export function LossChart({ data }: Props) {
                                 top: 8,
                                 right: 12,
                                 bottom: 0,
-                                left: -18
+                                left: 6
                             }}
                         >
                             <CartesianGrid
@@ -63,7 +110,7 @@ export function LossChart({ data }: Props) {
                                 tick={{ fontSize: 11, fill: "#64748b" }}
                                 tickLine={false}
                                 axisLine={{ stroke: "#cbd5e1" }}
-                                width={52}
+                                width={58}
                                 tickFormatter={formatLoss}
                             />
                             <Tooltip

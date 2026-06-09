@@ -52,11 +52,6 @@ interface Props {
     mode: AnimationMode
 
     onModeChange: (mode: AnimationMode) => void
-    onStep: () => void
-    onEpoch: () => void
-    onReset: () => void
-    isPlaying: boolean
-    onPlayToggle: () => void
     canDownloadTables: boolean
     onGenerateTable: () => void
 
@@ -94,8 +89,7 @@ interface Props {
 }
 
 export function Sidebar({
-    mode, onModeChange, onStep,
-    onEpoch, onReset, isPlaying, onPlayToggle,
+    mode, onModeChange,
     canDownloadTables,
     onGenerateTable,
     learningRate, onLearningRateChange,
@@ -328,28 +322,6 @@ export function Sidebar({
                         }
                         onClick={() => onModeChange("TERM")}
                     > Term </button>
-
-                </div>
-            </div>
-
-            <div className="sidebar-section">
-
-                <h3>Playback</h3>
-
-                <div className="playback-buttons">
-
-                    <button onClick={onStep}>Step</button>
-
-                    <button onClick={onEpoch}>Epoch</button>
-
-                    <button
-                        className={isPlaying ? "active" : ""}
-                        onClick={onPlayToggle}
-                    >
-                        {isPlaying ? "Pause" : "Play"}
-                    </button>
-
-                    <button className="secondary" onClick={onReset}>Reset</button>
 
                 </div>
             </div>

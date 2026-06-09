@@ -1,12 +1,77 @@
+import {
+    BookOpen,
+    FastForward,
+    Pause,
+    Play,
+    RotateCcw,
+    StepForward
+} from "lucide-react"
+
 import "./Header.css";
 
 const DOCUMENTATION_URL = "https://github.com/Hllinaz/neural-visualizer/wiki"
 
-export function Header() {
+interface Props {
+    isPlaying: boolean
+    onStep: () => void
+    onEpoch: () => void
+    onReset: () => void
+    onPlayToggle: () => void
+}
+
+export function Header({
+    isPlaying,
+    onStep,
+    onEpoch,
+    onReset,
+    onPlayToggle
+}: Props) {
 
     return (
 
         <header className="header">
+            <div className="header-playback" aria-label="Playback controls">
+
+                <button
+                    type="button"
+                    aria-label="Reset"
+                    title="Reset"
+                    onClick={onReset}
+                >
+                    <RotateCcw aria-hidden="true" size={18} strokeWidth={2.3} />
+                </button>
+
+                <button
+                    type="button"
+                    className={isPlaying ? "active" : ""}
+                    aria-label={isPlaying ? "Pause" : "Play"}
+                    title={isPlaying ? "Pause" : "Play"}
+                    onClick={onPlayToggle}
+                >
+                    {isPlaying
+                        ? <Pause aria-hidden="true" size={18} fill="currentColor" />
+                        : <Play aria-hidden="true" size={18} fill="currentColor" />}
+                </button>
+
+                <button
+                    type="button"
+                    aria-label="Step"
+                    title="Step"
+                    onClick={onStep}
+                >
+                    <StepForward aria-hidden="true" size={18} strokeWidth={2.3} />
+                </button>
+
+                <button
+                    type="button"
+                    aria-label="Epoch"
+                    title="Epoch"
+                    onClick={onEpoch}
+                >
+                    <FastForward aria-hidden="true" size={18} strokeWidth={2.3} />
+                </button>
+            </div>
+
             <div className="header-title">
                 <h2>
                     Neural Network Visualizer
@@ -17,8 +82,9 @@ export function Header() {
                 className="header-docs-link"
                 href={DOCUMENTATION_URL}
                 target="_blank"
-                rel="noreferrer"
+            rel="noreferrer"
             >
+                <BookOpen aria-hidden="true" size={17} strokeWidth={2.2} />
                 Documentation
             </a>
         </header>

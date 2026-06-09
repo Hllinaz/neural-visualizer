@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getNodeState } from "../../core/visual/getNodeState" 
 import { getConnectionState } from "../../core/visual/getConnectionState"
 import { BackwardNodeTrace } from "../../core/trace/BackwardNodeTrace"
@@ -44,48 +44,71 @@ export function NetworkCanvas({
     onOutputChange
 }: Props) {
 
+    const frameRef = useRef<HTMLDivElement | null>(null)
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
     useEffect(() => {
 
         const canvas = canvasRef.current
+        const frame = frameRef.current
 
-        if (!canvas) return
+        if (!canvas || !frame) return
 
         const ctx = canvas.getContext("2d")
 
         if (!ctx) return
 
-        const parent = canvas.parentElement
+        let animationFrameId = 0
 
-        if (!parent) return
+        const render = () => {
+            const pixelRatio = window.devicePixelRatio || 1
+            const { width, height } = frame.getBoundingClientRect()
+            const displayWidth = Math.floor(width)
+            const displayHeight = Math.floor(height)
 
-        const pixelRatio = window.devicePixelRatio || 1
-        const displayWidth = parent.clientWidth
-        const displayHeight = parent.clientHeight
+            if (displayWidth <= 0 || displayHeight <= 0) return
 
-        canvas.width = displayWidth * pixelRatio
-        canvas.height = displayHeight * pixelRatio
+            canvas.width = displayWidth * pixelRatio
+            canvas.height = displayHeight * pixelRatio
 
-        canvas.style.width = `${displayWidth}px`
-        canvas.style.height = `${displayHeight}px`
+            canvas.style.width = `${displayWidth}px`
+            canvas.style.height = `${displayHeight}px`
 
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+            ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
 
-        drawNetwork(
-            ctx,
-            displayWidth,
-            displayHeight,
-            snapshot,
-            controller,
-            selectedWeightId,
-            selectedBiasId
-        )
+            drawNetwork(
+                ctx,
+                displayWidth,
+                displayHeight,
+                snapshot,
+                controller,
+                selectedWeightId,
+                selectedBiasId
+            )
+        }
+
+        const requestRender = () => {
+            window.cancelAnimationFrame(animationFrameId)
+            animationFrameId = window.requestAnimationFrame(render)
+        }
+
+        requestRender()
+
+        const resizeObserver = new ResizeObserver(requestRender)
+
+        resizeObserver.observe(frame)
+        window.addEventListener("resize", requestRender)
+
+        return () => {
+            window.cancelAnimationFrame(animationFrameId)
+            resizeObserver.disconnect()
+            window.removeEventListener("resize", requestRender)
+        }
 
     }, [snapshot, controller, selectedWeightId, selectedBiasId])
 
     return (
-        <div className="network-canvas-frame">
+        <div className="network-canvas-frame" ref={frameRef}>
             <canvas
                 ref={canvasRef}
                 className="network-canvas can-select-values"
@@ -179,45 +202,64 @@ function SamplePanel({
     onInputChange,
     onOutputChange
 }: SamplePanelProps) {
+    const [isMinimized, setIsMinimized] = useState(false)
+
     return (
-        <div className="canvas-sample-panel">
+        <div className={isMinimized
+            ? "canvas-sample-panel is-minimized"
+            : "canvas-sample-panel"}
+        >
             <div className="sample-panel-header">
                 <strong>Sample</strong>
+                <button
+                    type="button"
+                    className="sample-panel-toggle"
+                    aria-label={isMinimized ? "Expand sample panel" : "Minimize sample panel"}
+                    title={isMinimized ? "Expand sample panel" : "Minimize sample panel"}
+                    aria-expanded={!isMinimized}
+                    onClick={() => setIsMinimized((current) => !current)}
+                >
+                    {isMinimized ? "+" : "-"}
+                </button>
             </div>
 
-            <div className="sample-panel-group">
-                <span className="sample-panel-label">Inputs</span>
+            {!isMinimized && (
+                <>
+                    <div className="sample-panel-group">
+                        <span className="sample-panel-label">Inputs</span>
 
-                <div className="sample-value-grid">
-                    {inputs.map((value, index) => (
-                        <label key={index} className="sample-value-cell">
-                            <span>x{index}</span>
-                            <NumberInput
-                                step="0.01"
-                                value={value}
-                                onValueChange={(nextValue) => onInputChange(index, nextValue)}
-                            />
-                        </label>
-                    ))}
-                </div>
-            </div>
+                        <div className="sample-value-grid">
+                            {inputs.map((value, index) => (
+                                <label key={index} className="sample-value-cell">
+                                    <span>x{index}</span>
+                                    <NumberInput
+                                        step="0.01"
+                                        value={value}
+                                        onValueChange={(nextValue) => onInputChange(index, nextValue)}
+                                    />
+                                </label>
+                            ))}
+                        </div>
+                    </div>
 
-            <div className="sample-panel-group">
-                <span className="sample-panel-label">Target</span>
+                    <div className="sample-panel-group">
+                        <span className="sample-panel-label">Target</span>
 
-                <div className="sample-value-grid">
-                    {outputs.map((value, index) => (
-                        <label key={index} className="sample-value-cell">
-                            <span>y{index}</span>
-                            <NumberInput
-                                step="0.01"
-                                value={value}
-                                onValueChange={(nextValue) => onOutputChange(index, nextValue)}
-                            />
-                        </label>
-                    ))}
-                </div>
-            </div>
+                        <div className="sample-value-grid">
+                            {outputs.map((value, index) => (
+                                <label key={index} className="sample-value-cell">
+                                    <span>y{index}</span>
+                                    <NumberInput
+                                        step="0.01"
+                                        value={value}
+                                        onValueChange={(nextValue) => onOutputChange(index, nextValue)}
+                                    />
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     )
 }
@@ -373,7 +415,7 @@ function drawNode(
     ctx.lineWidth = lineWidth
     ctx.stroke()
 
-    if (isSelectedBias && node.layerIndex > 0) {
+    if (isSelectedBias && node.layerIndex > 0 && state !== "CURRENT") {
         drawPill(
             ctx,
             `b ${formatShort(node.bias)}`,
@@ -628,7 +670,7 @@ function drawConnectionLabel(
 function drawActiveNodeCard(
     ctx: CanvasRenderingContext2D,
     width: number,
-    _height: number,
+    height: number,
     snapshot: NetworkSnapshot,
     controller: TraceController
 ) {
@@ -647,7 +689,7 @@ function drawActiveNodeCard(
     const cardWidth = 210
     const cardHeight = 116
     const x = width - cardWidth - 18
-    const y = 18
+    const y = height - cardHeight - 18
 
     ctx.save()
     ctx.fillStyle = "rgba(255,255,255,0.94)"
