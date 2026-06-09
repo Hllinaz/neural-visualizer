@@ -1,20 +1,21 @@
-# Neural Network Visualizer
+# Neural Network Playground
 
 An interactive educational tool for visualizing how a feedforward neural network learns from a single observation. The project focuses on making forward propagation, backpropagation, gradients, weights, biases, and loss evolution visible step by step.
 
 ## Overview
 
-Neural Network Visualizer lets students inspect a small dense neural network while it trains. Users can configure the architecture, activation function, loss function, initializer, sample inputs, targets, learning rate, weights, and biases. The app also provides animated training playback, loss charts, formula panels, and exportable training tables.
+Neural Network Playground lets students inspect a small dense neural network while it trains. Users can configure the architecture, activation function, loss function, initializer, sample inputs, targets, learning rate, weights, and biases. The app also provides header playback controls, adjustable playback speed, loss charts, formula panels, and exportable reports.
 
 ## Features
 
 - Interactive neural network canvas with node, connection, weight, bias, activation, delta, and loss values.
+- Minimizable sample panel for editing inputs and targets without covering the canvas.
 - Step-by-step animation modes: layer, node, and term.
-- Manual epoch playback and continuous play mode.
+- Header playback controls for reset, play/pause, step, epoch, and speed.
 - Keyboard shortcuts for training flow.
 - Weight initializers: He, Xavier, and custom initialization.
 - Manual weight and bias editing in custom initialization mode.
-- Loss chart by epoch.
+- Loss chart by epoch with SVG, PNG, and PDF export.
 - Exportable tables for:
   - Forward pass values.
   - Backward pass gradients.
@@ -27,6 +28,7 @@ Neural Network Visualizer lets students inspect a small dense neural network whi
 - TypeScript
 - Vite
 - Recharts
+- Lucide React
 - KaTeX
 
 ## Getting Started
@@ -53,7 +55,7 @@ npm run build
 
 The full documentation should live in the GitHub Wiki:
 
-https://github.com/Hllinaz/neural-visualizer/wiki
+https://github.com/Hllinaz/neural-network-playground/wiki
 
 ## Authors
 
