@@ -41,6 +41,20 @@
     display: block;
 }
 
+.header-playback .header-speed-button {
+    grid-template-columns: auto auto;
+    gap: 6px;
+    width: 64px;
+    padding: 0 9px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.header-speed-button span {
+    line-height: 1;
+}
+
 .header-playback button:hover {
     border-color: #2563eb;
     background: #eff6ff;

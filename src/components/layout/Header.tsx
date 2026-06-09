@@ -1,6 +1,7 @@
 import {
     BookOpen,
     FastForward,
+    Gauge,
     Pause,
     Play,
     RotateCcw,
@@ -17,6 +18,8 @@ interface Props {
     onEpoch: () => void
     onReset: () => void
     onPlayToggle: () => void
+    playbackSpeed: number
+    onPlaybackSpeedChange: () => void
 }
 
 export function Header({
@@ -24,7 +27,9 @@ export function Header({
     onStep,
     onEpoch,
     onReset,
-    onPlayToggle
+    onPlayToggle,
+    playbackSpeed,
+    onPlaybackSpeedChange
 }: Props) {
 
     return (
@@ -70,11 +75,22 @@ export function Header({
                 >
                     <FastForward aria-hidden="true" size={18} strokeWidth={2.3} />
                 </button>
+
+                <button
+                    type="button"
+                    className="header-speed-button"
+                    aria-label={`Playback speed ${playbackSpeed}x`}
+                    title={`Playback speed ${playbackSpeed}x`}
+                    onClick={onPlaybackSpeedChange}
+                >
+                    <Gauge aria-hidden="true" size={17} strokeWidth={2.3} />
+                    <span>{playbackSpeed}x</span>
+                </button>
             </div>
 
             <div className="header-title">
                 <h2>
-                    Neural Network Visualizer
+                    Neural Network Playground
                 </h2>
             </div>
 

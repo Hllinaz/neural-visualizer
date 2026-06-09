@@ -51,6 +51,7 @@ export const INITIALIZERS = {
 
 const traceBuilder = new NeuralTraceBuilder()
 const controller = new TraceController()
+const PLAYBACK_SPEEDS = [0.5, 1, 2, 4] as const
 
 function createNetwork(
 	architecture: number[],
@@ -92,6 +93,7 @@ function App() {
 	const [hasStarted, setHasStarted] = useState(false)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [isRunningEpoch, setIsRunningEpoch] = useState(false)
+	const [playbackSpeed, setPlaybackSpeed] = useState<(typeof PLAYBACK_SPEEDS)[number]>(1)
 	const advanceStepRef = useRef<() => boolean>(() => false)
 	const startEpochRef = useRef<() => void>(() => {})
 	const resetRef = useRef<() => void>(() => {})
@@ -395,6 +397,15 @@ function App() {
 		setIsPlaying(current => !current)
 	}
 
+	const handlePlaybackSpeedChange = () => {
+		setPlaybackSpeed(current => {
+			const currentIndex = PLAYBACK_SPEEDS.indexOf(current)
+			const nextIndex = (currentIndex + 1) % PLAYBACK_SPEEDS.length
+
+			return PLAYBACK_SPEEDS[nextIndex]
+		})
+	}
+
 	const handleGenerateTable = () => {
 		if (forwardRows.length === 0) return
 		setIsTableModalOpen(true)
@@ -426,10 +437,10 @@ function App() {
 			if (completedEpoch && !isPlaying) {
 				setIsRunningEpoch(false)
 			}
-		}, 150)
+		}, 150 / playbackSpeed)
 
 		return () => window.clearInterval(intervalId)
-	}, [isPlaying, isRunningEpoch])
+	}, [isPlaying, isRunningEpoch, playbackSpeed])
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -468,6 +479,8 @@ function App() {
 				onEpoch={handleEpoch}
 				onReset={handleReset}
 				onPlayToggle={handlePlayToggle}
+				playbackSpeed={playbackSpeed}
+				onPlaybackSpeedChange={handlePlaybackSpeedChange}
 			/>
 
 			<div className="main-layout">
