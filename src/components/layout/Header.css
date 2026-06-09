@@ -84,10 +84,19 @@
 
 .header h2 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.65rem;
     font-weight: 600;
     color: #111827;
     line-height: 1;
+}
+
+.header-title p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 .header-docs-link {
